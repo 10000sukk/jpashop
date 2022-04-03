@@ -20,14 +20,14 @@ open class Order(
     @Column(name = "order_id")
     open var id:Long? = null
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     open var member:Member? = member
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL])
     open var orderItems:MutableList<OrderItem> = mutableListOf()
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id")
     open var delivery = delivery
 
@@ -35,4 +35,20 @@ open class Order(
 
     @Enumerated(EnumType.STRING)
     open var status = status // ORDER, CANCEL
+
+    fun changeMember(member: Member) {
+        this.member = member
+        member.orders.add(this)
+    }
+
+    fun addOrderItem(orderItem: OrderItem) {
+        this.orderItems.add(orderItem)
+        orderItem.order = this
+    }
+
+    fun changeDelivery(delivery: Delivery) {
+        this.delivery = delivery
+        delivery.order = this
+    }
+
 }

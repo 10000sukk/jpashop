@@ -16,12 +16,17 @@ open class Delivery (
     @Column(name = "delivery_id")
     open var id:Long? = null
 
-    @OneToOne(mappedBy = "delivery")
-    open var order:Order? = order
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    open var order = order
 
     @Embedded
     open var address:Address? = address
 
     @Enumerated(EnumType.STRING)
     open var status:DeliveryStatus? = status // READY, COMP
+
+    fun changeOrder(order: Order) {
+        this.order = order
+        order.delivery = this
+    }
 }

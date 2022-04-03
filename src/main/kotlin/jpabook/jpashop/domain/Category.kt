@@ -25,10 +25,25 @@ open class Category (
     )
     open var items:MutableList<Item> = mutableListOf()
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     open var parent:Category? = parent
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL])
     open var child:MutableList<Category> = mutableListOf()
+
+    fun addItems(item: Item) {
+        this.items.add(item)
+        item.categories.add(this)
+    }
+
+    fun changeParent(parent: Category) {
+        this.parent = parent
+        parent.child.add(this)
+    }
+
+    fun addChild(child: Category) {
+        this.child.add(child)
+        child.parent = this
+    }
 }

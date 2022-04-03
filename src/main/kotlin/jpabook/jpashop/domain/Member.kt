@@ -20,8 +20,12 @@ open class Member(
     @Embedded
     open var address:Address? = address
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL])
     open var orders:MutableList<Order> = mutableListOf()
 
+    fun addOrders(order: Order) {
+        this.orders.add(order)
+        order.member = this
+    }
 
 }

@@ -27,6 +27,12 @@ abstract class Item (
     open var categories:MutableList<Category> = mutableListOf()
 
 
+    fun addCategory(category: Category) {
+        this.categories.add(category)
+        category.items.add(this)
+    }
+
+
 
 
 
